@@ -372,9 +372,9 @@ def prepare_cifar10_incremental(batch_size=64, tasks=5, seed=1993, root='./data'
     return task_splits
 
 # -------------------------
-# Main demo run
+# Main run
 # -------------------------
-def demo_run(device="auto"):
+def run(device="auto"):
     set_seed(1993)
     device = get_device(device)
     # backbone (pretrained)
@@ -434,4 +434,4 @@ def demo_run(device="auto"):
     print("Demo complete.")
 
 if __name__ == '__main__':
-    demo_run(device="auto")
+    run(device="auto")
