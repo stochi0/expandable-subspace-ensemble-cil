@@ -1,162 +1,75 @@
-# Expandable Subspace Ensemble for Pre-Trained Model-Based Class-Incremental Learning 🌟
+# Expandable Subspace Ensemble
 
-## Overview 📚
+A PyTorch implementation exploring expanding adapter subspaces for
+class-incremental learning on CIFAR-10, based on the EASE paper.
 
-This repository implements an **EASE (Efficient Adapter for Subspace Expansion)** paper using PyTorch, designed for incremental learning on the CIFAR-10 dataset. The model consists of a simple CNN backbone and task-specific adapters that allow for efficient learning of new classes while preserving knowledge of previously learned tasks.
+## What is included
 
-## Features ⚙️
+The implementation in [ease.py](ease.py) uses a frozen pretrained ResNet-18,
+a bottleneck adapter for each task, class prototypes, and prototype synthesis
+across adapter subspaces. The demonstration partitions CIFAR-10 into five
+two-class tasks and evaluates the classes seen so far.
 
-- **Incremental Learning**: Trains the model on multiple tasks without forgetting previously learned classes. 🔄
-- **Prototype Management**: Extracts and manages class prototypes for few-shot learning. 🏷️
-- **Modular Architecture**: Easy to extend with different backbones and adapters. 🛠️
+This is a study implementation. It does not reproduce the original paper's
+full benchmark protocol or establish its reported accuracy.
 
-## Requirements 📦
+## Installation
 
-- Python 3.6+
-- PyTorch 1.7+
-- torchvision
-- NumPy
+Create a Python environment with [uv](https://docs.astral.sh/uv/), then install
+the dependencies used by the implementation:
 
-## Installation 🖥️
+```sh
+git clone https://github.com/stochi0/expandable-subspace-ensemble-cil.git
+cd expandable-subspace-ensemble-cil
+uv venv --python 3.11
+uv pip install torch torchvision numpy
+```
 
-1. Create an environment
-2. Clone the repository
-3. Install the required packages
-4. Run the main.py for a high level implementation, app.py file for a more robust implementation
-   
-# Class Methods Documentation
+The pretrained-backbone path uses torchvision's `ResNet18_Weights` API.
+There is no locked dependency set in this repository.
 
-## SimpleCNN
+## A small adapter example
 
-### `__init__(self)`
-- **Purpose**: Initializes the SimpleCNN model.
-- **Inputs**: None.
-- **Outputs**: Configures the model architecture, including convolutional and pooling layers, as well as the fully connected layer.
+```python
+import torch
+from ease import Adapter
 
-### `forward(self, x)`
-- **Purpose**: Defines the forward pass of the model.
-- **Inputs**: 
-  - `x`: Input tensor of shape `(N, 3, 32, 32)` (N = batch size).
-- **Outputs**: 
-  - Feature tensor of shape `(N, 128)` after processing through the network.
+adapter = Adapter(d=512, r=16)
+features = torch.randn(4, 512)
+adapted = adapter(features)
+print(adapted.shape)  # torch.Size([4, 512])
+```
 
----
+The example exercises the adapter without downloading data or pretrained weights.
+Run it with the environment's Python, for example `uv run --no-project python`.
 
-## Adapter
+## Full demonstration and limitations
 
-### `__init__(self, input_dim, reduction_dim)`
-- **Purpose**: Initializes the Adapter with specified input and reduced dimensions.
-- **Inputs**: 
-  - `input_dim`: Dimension of the input feature vector.
-  - `reduction_dim`: Dimension for the reduced representation.
-- **Outputs**: Configures the down-projection, activation, and up-projection layers.
+The entrypoint is `ease.py`; there are no `main.py` or `app.py` entrypoints.
+The full demonstration downloads CIFAR-10 and pretrained ResNet-18 weights,
+then trains each new adapter for ten epochs.
 
-### `forward(self, x)`
-- **Purpose**: Defines the forward pass with a residual connection.
-- **Inputs**: 
-  - `x`: Input tensor (feature vector).
-- **Outputs**: 
-  - Adapted feature vector with the same dimension as input.
+The cumulative evaluation loop currently assembles DataLoader batches with
+`torch.stack` and constructs labels from a list of batch tensors. That assembly
+needs correction before the full demonstration can supply valid end-to-end
+accuracy measurements. Use the adapter example for a local smoke check; no
+benchmark accuracy is claimed here.
 
----
+Device selection is available through `run(device="cpu")`, `run(device="mps")`,
+or `run(device="cuda")`. The script's default `auto` path selects MPS when
+available and otherwise CPU; request CUDA explicitly for an available CUDA device.
 
-## EASE
+## Reading the implementation
 
-### `__init__(self, backbone, reduction_dim=64, num_classes=10)`
-- **Purpose**: Initializes the EASE model with a backbone and task specifications.
-- **Inputs**: 
-  - `backbone`: Instance of the `SimpleCNN`.
-  - `reduction_dim`: Dimensionality for the adapters (default: 64).
-  - `num_classes`: Number of output classes (default: 10).
-- **Outputs**: Configures the model with adapters and classifiers for multiple tasks.
+| Component | Purpose |
+| --- | --- |
+| `FrozenBackbone` | Extract frozen pretrained image features |
+| `Adapter` | Project features through a trainable bottleneck |
+| `EASE_CIL` | Manage task adapters, prototypes, synthesis, and inference |
+| `train_adapter_for_task` | Train the current task's adapter |
+| `prepare_cifar10_incremental` | Build class-incremental data splits |
 
-### `add_task(self)`
-- **Purpose**: Adds a new adapter and classifier for a new task.
-- **Inputs**: None.
-- **Outputs**: Updates the model to include a new task-specific adapter and classifier.
+## References
 
-### `forward(self, x, task_idx)`
-- **Purpose**: Defines the forward pass through the backbone, adapter, and classifier for the specified task.
-- **Inputs**: 
-  - `x`: Input tensor for prediction.
-  - `task_idx`: Index of the current task.
-- **Outputs**: 
-  - Class logits for the input tensor corresponding to the task.
-
----
-
-## PrototypeManager
-
-### `__init__(self)`
-- **Purpose**: Initializes the PrototypeManager.
-- **Inputs**: None.
-- **Outputs**: Configures an empty dictionary to hold prototypes.
-
-### `extract_prototypes(self, model, task_idx, dataset, device)`
-- **Purpose**: Extracts class prototypes for a specific task.
-- **Inputs**: 
-  - `model`: Instance of the EASE model.
-  - `task_idx`: Index of the current task.
-  - `dataset`: Dataset used for prototype extraction.
-  - `device`: Device (CPU/GPU) for computations.
-- **Outputs**: 
-  - `prototypes`: Dictionary of normalized prototypes for each class in the task.
-
-### `complement_old_prototypes(self, old_prototypes, new_prototypes)`
-- **Purpose**: Synthesizes old prototypes in the new semantic space using similarity.
-- **Inputs**: 
-  - `old_prototypes`: Dictionary of prototypes from the previous task.
-  - `new_prototypes`: Dictionary of prototypes from the current task.
-- **Outputs**: 
-  - `complemented`: Dictionary of complemented old prototypes in the new subspace.
-
-# Functions Documentation
-
-## `weighted_inference(model, images, task_idx, prototypes)`
-- **Purpose**: Performs inference across tasks using class prototypes for weighted logits.
-- **Inputs**: 
-  - `model`: Instance of the EASE model.
-  - `images`: Input batch of images.
-  - `task_idx`: Current task index.
-  - `prototypes`: Dictionary of class prototypes for the current task.
-- **Outputs**: 
-  - Aggregated logits tensor after applying weights based on prototype similarity.
-
----
-
-## `train_task(model, prototype_manager, dataloader, task_idx, device, epochs=10, lr=1e-3)`
-- **Purpose**: Trains the model on a specific task and updates prototypes.
-- **Inputs**: 
-  - `model`: Instance of the EASE model.
-  - `prototype_manager`: Instance of the PrototypeManager.
-  - `dataloader`: DataLoader for the training data.
-  - `task_idx`: Index of the current task.
-  - `device`: Device for computations.
-  - `epochs`: Number of training epochs (default: 10).
-  - `lr`: Learning rate (default: 1e-3).
-- **Outputs**: 
-  - Updates the model and prototype manager with new task adapters and prototypes.
-
----
-
-## `evaluate_model(model, prototype_manager, test_loader, device, task_idx)`
-- **Purpose**: Evaluates the model on the test dataset for the current task.
-- **Inputs**: 
-  - `model`: Instance of the EASE model.
-  - `prototype_manager`: Instance of the PrototypeManager.
-  - `test_loader`: DataLoader for the test data.
-  - `device`: Device for computations.
-  - `task_idx`: Index of the current task.
-- **Outputs**: 
-  - Prints the accuracy of the model on the test dataset for the current task.
-
----
-
-## `prepare_dataloaders(task_idx, batch_size=64)`
-- **Purpose**: Prepares training and testing data loaders for a specific task.
-- **Inputs**: 
-  - `task_idx`: Index of the current task.
-  - `batch_size`: Batch size for DataLoader (default: 64).
-- **Outputs**: 
-  - `train_loader`: DataLoader for the training data of the current task.
-  - `test_loader`: DataLoader for the test data of the current task.
+- [Expandable Subspace Ensemble for Pre-Trained Model-Based Class-Incremental Learning](docs/cvpr2024_Expandable_Subspace_Ensemble_CIL.pdf) — the original paper.
+- [Concise review](docs/concise_review.pdf) — accompanying study notes.
