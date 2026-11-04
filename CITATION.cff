@@ -1,0 +1,14 @@
+{
+  "cff-version": "1.2.0",
+  "message": "Please cite this software when referring to this implementation. Specify the commit used; cite upstream research separately.",
+  "type": "software",
+  "title": "Expandable Subspace Ensemble",
+  "authors": [
+    {
+      "family-names": "Bodade",
+      "given-names": "Ayush"
+    }
+  ],
+  "repository-code": "https://github.com/stochi0/expandable-subspace-ensemble-cil",
+  "url": "https://github.com/stochi0/expandable-subspace-ensemble-cil"
+}
