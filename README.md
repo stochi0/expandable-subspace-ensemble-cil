@@ -73,5 +73,3 @@ available and otherwise CPU; request CUDA explicitly for an available CUDA devic
 
 - [Expandable Subspace Ensemble for Pre-Trained Model-Based Class-Incremental Learning](docs/cvpr2024_Expandable_Subspace_Ensemble_CIL.pdf) — the original paper.
 - [Concise review](docs/concise_review.pdf) — accompanying study notes.
-
-[Citation guide](CITATION.md) · [BibTeX](CITATION.bib)
