@@ -3,8 +3,6 @@
 A PyTorch implementation exploring expanding adapter subspaces for
 class-incremental learning on CIFAR-10, based on the EASE paper.
 
-## What is included
-
 The implementation in [ease.py](ease.py) uses a frozen pretrained ResNet-18,
 a bottleneck adapter for each task, class prototypes, and prototype synthesis
 across adapter subspaces. The demonstration partitions CIFAR-10 into five
@@ -58,16 +56,6 @@ benchmark accuracy is claimed here.
 Device selection is available through `run(device="cpu")`, `run(device="mps")`,
 or `run(device="cuda")`. The script's default `auto` path selects MPS when
 available and otherwise CPU; request CUDA explicitly for an available CUDA device.
-
-## Reading the implementation
-
-| Component | Purpose |
-| --- | --- |
-| `FrozenBackbone` | Extract frozen pretrained image features |
-| `Adapter` | Project features through a trainable bottleneck |
-| `EASE_CIL` | Manage task adapters, prototypes, synthesis, and inference |
-| `train_adapter_for_task` | Train the current task's adapter |
-| `prepare_cifar10_incremental` | Build class-incremental data splits |
 
 ## References
 
