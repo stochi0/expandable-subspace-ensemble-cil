@@ -78,8 +78,6 @@ available and otherwise CPU; request CUDA explicitly for an available CUDA devic
 
 <!-- BEGIN generated citations -->
 
-Citation metadata matches the [ORCID record](https://orcid.org/0009-0007-2252-8905). [Complete bibliography](https://www.latentpaths.com/citations/all.bib).
-
 ```bibtex
 @software{bodadeprojectexpandablesubspaceensemblecil,
   author = {Bodade, Ayush},
@@ -88,7 +86,5 @@ Citation metadata matches the [ORCID record](https://orcid.org/0009-0007-2252-89
   note = {Software implementation; cite the original research separately. Specify the commit or version used.}
 }
 ```
-
-[Citation file](https://www.latentpaths.com/citations/project/expandable-subspace-ensemble-cil.bib) · [Work](https://github.com/stochi0/expandable-subspace-ensemble-cil)
 
 <!-- END generated citations -->
