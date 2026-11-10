@@ -1,14 +1,13 @@
-{
-  "cff-version": "1.2.0",
-  "message": "Please cite this software when referring to this implementation. Specify the commit used; cite upstream research separately.",
-  "type": "software",
-  "title": "Expandable Subspace Ensemble",
-  "authors": [
-    {
-      "family-names": "Bodade",
-      "given-names": "Ayush"
-    }
-  ],
-  "repository-code": "https://github.com/stochi0/expandable-subspace-ensemble-cil",
-  "url": "https://github.com/stochi0/expandable-subspace-ensemble-cil"
-}
+cff-version: 1.2.0
+message: Cite this software when using its implementation; cite the related
+  paper or article for the research. Specify the version or commit used.
+  Citation metadata is maintained in latentpaths/website; generated with pnpm
+  citations:sync.
+type: software
+title: Expandable Subspace Ensemble
+authors:
+  - family-names: Bodade
+    given-names: Ayush
+    orcid: https://orcid.org/0009-0007-2252-8905
+repository-code: https://github.com/stochi0/expandable-subspace-ensemble-cil
+url: https://github.com/stochi0/expandable-subspace-ensemble-cil
