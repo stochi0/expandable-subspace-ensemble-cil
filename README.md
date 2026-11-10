@@ -73,3 +73,22 @@ available and otherwise CPU; request CUDA explicitly for an available CUDA devic
 
 - [Expandable Subspace Ensemble for Pre-Trained Model-Based Class-Incremental Learning](docs/cvpr2024_Expandable_Subspace_Ensemble_CIL.pdf) — the original paper.
 - [Concise review](docs/concise_review.pdf) — accompanying study notes.
+
+## Citation
+
+<!-- BEGIN generated citations -->
+
+Citation metadata matches the [ORCID record](https://orcid.org/0009-0007-2252-8905). [Complete bibliography](https://www.latentpaths.com/citations/all.bib).
+
+```bibtex
+@software{bodadeprojectexpandablesubspaceensemblecil,
+  author = {Bodade, Ayush},
+  title = {{Expandable Subspace Ensemble}},
+  url = {https://github.com/stochi0/expandable-subspace-ensemble-cil},
+  note = {Software implementation; cite the original research separately. Specify the commit or version used.}
+}
+```
+
+[Citation file](https://www.latentpaths.com/citations/project/expandable-subspace-ensemble-cil.bib) · [Work](https://github.com/stochi0/expandable-subspace-ensemble-cil)
+
+<!-- END generated citations -->
